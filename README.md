@@ -3,10 +3,12 @@ This is a web app for secret gift exchange game admin to randomly match the part
 
 ## prerequisites
 This a java web app, to run it you will need the following prerequisites
+
 1. Apache Maven, you can find it here https://maven.apache.org/download.cgi
+
 2. Java 8, you can find it here http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
 
-My environment: Apache Maven 3.1.1, Java version: 1.8.0_40
+* My environment: Apache Maven 3.1.1, Java version: 1.8.0_40
 
 ## How to install the app
 1. Checkout the branch and run `mvn clean install` from terminal
