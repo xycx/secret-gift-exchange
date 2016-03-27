@@ -1,0 +1,35 @@
+.git
+*/.git
+*.releaseBackup
+*.versionsBackup
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+*.old
+*.class
+*.pyc
+
+# IDE #
+.idea
+*.iml
+target/
+tests/target/
+/target/
+before/
+/test-output/
+logs/
+*~
+*/doc/
+*.tgz
+*.log
+*.tar
+.classpath
+.project
+.settings/
+.DS_Store
+.sw?
+clone_*
+node_modules/
