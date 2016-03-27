@@ -36,7 +36,7 @@ public class Resource {
         try {
             final List<Participant> participants = parseTextIntoPersons(text);
             final List<ExchangePair> exchangePairs = randomPickWithRetry(participants, allowSameFamily);
-            EmailUtil.getInstance().sendRecipientEmailToGifter(exchangePairs);
+            EmailUtil.getInstance().sendGifterNotificationEmail(exchangePairs);
             return Response.status(OK_200)
                 .entity(exchangePairs)
                 .build();

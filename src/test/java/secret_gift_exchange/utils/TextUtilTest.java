@@ -48,7 +48,7 @@ public class TextUtilTest {
         assertFalse(isValidEmailAddress("<>"));
     }
 
-    public String getFromFile(final String filename) throws IOException {
+    public static String getFromFile(final String filename) throws IOException {
         final InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(filename);
         return IOUtils.toString(in, "UTF-8");
     }

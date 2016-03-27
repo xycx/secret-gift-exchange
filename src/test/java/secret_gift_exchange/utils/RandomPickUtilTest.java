@@ -19,7 +19,7 @@ public class RandomPickUtilTest {
     @Test
     public void testRandomPickAllowSameFamily() throws ImpossibleMatchingException {
         final List<Participant> participants = buildTestPersons("1", "a", "1", "b");
-        final List<ExchangePair> exchangePairs = randomPick(participants, true);
+        final List<ExchangePair> exchangePairs = randomPickWithRetry(participants, true);
         for (final ExchangePair pair : exchangePairs) {
             assertNotEquals(pair.getGifter(), pair.getReceiver());
         }
@@ -29,7 +29,7 @@ public class RandomPickUtilTest {
     public void testRandomPickNotAllowSameFamily() throws ImpossibleMatchingException {
         final List<Participant> participants = buildTestPersons(
             "1", "a", "2", "a", "1", "c", "2", "c");
-        final List<ExchangePair> exchangePairs = randomPick(participants, false);
+        final List<ExchangePair> exchangePairs = randomPickWithRetry(participants, false);
         for (final ExchangePair pair : exchangePairs) {
             assertNotEquals(pair.getGifter().getLastName(), pair.getReceiver().getLastName());
         }
@@ -42,8 +42,22 @@ public class RandomPickUtilTest {
         final List<ExchangePair> exchangePairs = randomPickWithRetry(participants, true);
     }
 
-    @Test(expectedExceptions = {ImpossibleMatchingException.class})
+    @Test(expectedExceptions = {SecretGiftExchangeException.class},
+        expectedExceptionsMessageRegExp = "Duplicate participants found")
+    public void testRandomPickWithDuplicate() throws ImpossibleMatchingException {
+        final List<Participant> participants = buildTestPersons("1", "a", "1", "a", "1", "b");
+        final List<ExchangePair> exchangePairs = randomPickWithRetry(participants, false);
+    }
+
+    @Test(expectedExceptions = {SecretGiftExchangeException.class},
+        expectedExceptionsMessageRegExp = "Not enough participants")
     public void testRandomPickWithNotEnoughFamily() throws ImpossibleMatchingException {
+        final List<Participant> participants = buildTestPersons("1", "a", "2", "a", "1", "b");
+        final List<ExchangePair> exchangePairs = randomPickWithRetry(participants, false);
+    }
+
+    @Test(expectedExceptions = {ImpossibleMatchingException.class})
+    public void testRandomPickWithNotEnoughFamilyWithoutRetry() throws ImpossibleMatchingException {
         final List<Participant> participants = buildTestPersons("1", "a", "2", "a", "1", "b");
         final List<ExchangePair> exchangePairs = randomPick(participants, false);
     }

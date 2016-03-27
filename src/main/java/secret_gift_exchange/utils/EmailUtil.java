@@ -1,5 +1,6 @@
 package secret_gift_exchange.utils;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
@@ -38,33 +39,40 @@ public enum EmailUtil {
         return INSTANCE;
     }
 
-    public void sendRecipientEmailToGifter(final List<ExchangePair> pairs) {
+    public void sendGifterNotificationEmail(final List<ExchangePair> pairs) {
         for (ExchangePair pair : pairs) {
-            EmailUtil.getInstance().sendRecipientEmailToGifter(pair);
+            EmailUtil.getInstance().sendGifterNotificationEmail(pair);
         }
     }
 
-    public void sendRecipientEmailToGifter(final ExchangePair pair) {
+    public MimeMessage buildGifterNotificationEmail(final ExchangePair pair)
+        throws MessagingException {
+
+        final MimeMessage message = new MimeMessage(session);
+
+        message.setFrom(new InternetAddress(EMAIL_FROM));
+        message.addRecipient(TO, new InternetAddress(pair.getGifter().getEmail()));
+
+        message.setSubject(EMAIL_SUBJECT);
+        final String content =
+            String.format(EMAIL_TEMPLATE, pair.getGifter().getFirstName(),
+                          pair.getReceiver().getFullName());
+        message.setText(content);
+
+        return message;
+    }
+
+    public void sendGifterNotificationEmail(final ExchangePair pair) {
 
         try{
-            final MimeMessage message = new MimeMessage(session);
-
-            message.setFrom(new InternetAddress(EMAIL_FROM));
-            message.addRecipient(TO, new InternetAddress(pair.getGifter().getEmail()));
-
-            message.setSubject(EMAIL_SUBJECT);
-            final String content =
-                String.format(EMAIL_TEMPLATE, pair.getGifter().getFirstName(),
-                              pair.getReceiver().getFullName());
-            message.setText(content);
-
+            final MimeMessage message = buildGifterNotificationEmail(pair);
             logger.log(INFO, "Senting email from {0} to {1}, content: {2}",
-                       new String[]{EMAIL_FROM,
+                       new Object[]{EMAIL_FROM,
                                     pair.getGifter().getEmail(),
-                                    content});
+                                    message.getContent()});
             Transport.send(message);
             logger.log(INFO, "Sent email to {0} successfully", pair.getGifter().getEmail());
-        } catch (MessagingException e) {
+        } catch (MessagingException | IOException e) {
             logger.log(WARNING, "Failed to send email to {0}", pair.getGifter().getEmail());
         }
     }
