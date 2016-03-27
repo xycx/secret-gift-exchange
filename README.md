@@ -10,7 +10,7 @@ This a java web app, to run it you will need the following prerequisites
 
 * My environment: Apache Maven 3.1.1, Java version: 1.8.0_40
 
-## How to install the app
+## How to install and run the app
 1. Checkout the branch and run `mvn clean install` from terminal
 2. To start server, run `mvn exec:java -Dexec.mainClass="secret_gift_exchange.App"`
 3. Keep the server running, open another tab in terminal and put the participant data into data.txt
